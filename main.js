@@ -59,6 +59,38 @@ class UI {
             // Lsiting Each Books Within Table As Appending Child Elements.
             list.appendChild(newRow);
     }
+
+    static deleteBook(element) {
+        // Checking Whether Containg Elements Class Carries 'delete'
+        if(element.classList.contains("delete")) {
+            element.parentElement.parentElement.remove();
+        }
+    }
+
+    static showAlert(message, className) {
+        // Creating Expected Tag Element
+        const alertDiv = document.createElement("div");
+        // Asigning Class Name For Tag Element.
+        alertDiv.className = `alert alert-${className}`;
+        // Placing Div Elemnt Within D.O.M.
+        alertDiv.appendChild(document.createTextNode(message));
+        // Selecting Container For Div Tag
+        const alertContainer = document.querySelector(".container");
+        // Selecting Next Element Tag
+        const bookForm = document.querySelector("#book-form");
+        // Placing Element Within Tags
+        alertContainer.insertBefore(alertDiv, bookForm);
+        // Making It Go Dissapppear 
+        setTimeout(() => document.querySelector(".alert").remove(), 2000);
+
+    }
+
+    static clearFields() {
+        // Grab And Clear Fields
+        document.querySelector("#title").value = "";
+        document.querySelector("#author").value = "";
+        document.querySelector("#isbn").value = "";
+    }
 }
 
 // Store Class : Handles Storage
@@ -79,10 +111,51 @@ document.querySelector("#book-form").addEventListener("submit", (event)=>
      const bookAuthor = document.querySelector("#author").value;
      const bookISBN = document.querySelector("#isbn").value;
 
-     // Instantiate Book
-     const bookCreated = new Book(bookTitle, bookAuthor, bookISBN);
+     // Validate Inputs For Books.
+     if( bookTitle == "" || bookAuthor == "" || bookISBN == "" ) {
+         
+        //alert("Please Enter All Fields");
+         UI.showAlert("Please Enter All Fields", "danger");
+         //UI.showAlert("Please Enter All Fields", "info");
+         //UI.showAlert("Please Enter All Fields", "success");
 
-     console.log(bookCreated);
+     } else {
+
+        // Instantiate Book
+        const bookCreated = new Book(bookTitle, bookAuthor, bookISBN);
+        //console.log(bookCreated);
+        // Add Book To UI
+        UI.addBookToList(bookCreated);
+
+        // Success Message
+        UI.showAlert("New Book Successfully Added", "success");
+
+        // Clear Fields
+        UI.clearFields();
+
+     }
+
+    //  // Instantiate Book
+    //  const bookCreated = new Book(bookTitle, bookAuthor, bookISBN);
+    //  //console.log(bookCreated);
+    //  // Add Book To UI
+    //  UI.addBookToList(bookCreated);
+
+    //  // Clear Fields
+    //  UI.clearFields();
  });
 
 // Event : Remove Book
+
+// Creating Event Listener For Deleting A Book From Table.
+document.querySelector("#table-for-book-list").addEventListener("click", (event) => {
+    
+    //console.log(event.target);
+    // Triggering Delete
+    UI.deleteBook(event.target);
+
+    // Success Message
+    UI.showAlert("Book Deleted", "info");
+    //UI.showAlert("Book Deleted", "success");
+
+});
