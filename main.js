@@ -20,22 +20,24 @@ class UI {
     static displayBooks() {
         
         // Dummy Books
-        const storedBooks = [
-            {
-                title: "First Book",
-                author: "John Doe",
-                isbn: "77559977"
-            },
+        // const storedBooks = [
+        //     {
+        //         title: "First Book",
+        //         author: "John Doe",
+        //         isbn: "77559977"
+        //     },
 
-            {
-                title: "Second Book",
-                author: "Sicko Demio",
-                isbn: "88994433"
-            }
-        ];
+        //     {
+        //         title: "Second Book",
+        //         author: "Sicko Demio",
+        //         isbn: "88994433"
+        //     }
+        // ];
 
-        const books = storedBooks;
-        
+        // Using Dynamically Added Books
+        //const books = storedBooks;
+        const books = Store.getBooks();
+
         // Displaying All Stored Books 
         books.forEach((book) => UI.addBookToList(book));
     }
@@ -95,6 +97,48 @@ class UI {
 
 // Store Class : Handles Storage
 
+class Store {
+    
+    static getBooks() {
+
+        let books;
+        // If List Is Empty
+        if(localStorage.getItem("books") == null) {
+            books = [];
+        } else {
+            // List Books From Storage.
+            books = JSON.parse(localStorage.getItem("books"));
+        }
+        // Returning Books
+        return books;
+
+    }
+
+    static addBook(book) {
+        // Retriving Books
+        const books = Store.getBooks();
+        // Adding Newly Created Book 
+        books.push(book);
+        // Storing Book
+        localStorage.setItem("books", JSON.stringify(books));
+
+    }
+
+    static removeBook(isbn) {
+        // Getting Stored Books Data
+        const books = Store.getBooks();
+        // Deleting With Matching ISBN
+        books.forEach((book, index) => {
+            if(book.isbn == isbn) {
+                // Deleting That Selected Item.
+                books.splice(index, 1);
+            }
+        });
+        // Rearranging Storage
+        localStorage.setItem("books", JSON.stringify(books));
+    }
+}
+
 // Event : Display Books
 
 document.addEventListener("DOMContentLoaded", UI.displayBooks);
@@ -124,8 +168,12 @@ document.querySelector("#book-form").addEventListener("submit", (event)=>
         // Instantiate Book
         const bookCreated = new Book(bookTitle, bookAuthor, bookISBN);
         //console.log(bookCreated);
+        
         // Add Book To UI
         UI.addBookToList(bookCreated);
+
+        // Add Book To Storage
+        Store.addBook(bookCreated);
 
         // Success Message
         UI.showAlert("New Book Successfully Added", "success");
@@ -153,6 +201,10 @@ document.querySelector("#table-for-book-list").addEventListener("click", (event)
     //console.log(event.target);
     // Triggering Delete
     UI.deleteBook(event.target);
+
+    // Remove Book From Storage
+    //Store.removeBook(event.target.parentElement.previousElementSibling.textContent);
+    Store.removeBook(event.target.parentElement.previousElementSibling.innerText);
 
     // Success Message
     UI.showAlert("Book Deleted", "info");
