@@ -65,6 +65,103 @@ const filteredCompanies = companies.filter(Company => (Company.end - Company.sta
 
 console.log(filteredCompanies);
 
-  // map
-  // sort
-  // reduce
+// map
+// Creating Array Of Company Names
+const companyNames = companies.map(function(company) {
+  return company.name;
+});
+
+console.log(companyNames);
+
+const testMap = companies.map(function(company) {
+  return `{company.name} [${company.start} - ${company.end}]`;
+});
+
+console.log(testMap);
+
+const testMapShortHand = companies.map(company => `${company.name} [${company.start} -- ${company.end}]`);
+
+console.log(testMapShortHand);
+
+// Creating Map Array Of Ages
+const agesSquared = ages.map(age => Math.sqrt(age));
+
+console.log(agesSquared);
+
+const agesMapped = ages.map(age => age * 2);
+
+console.log(agesMapped);
+
+const chainedMap = ages
+  .map(age => Math.sqrt(age))
+  .map(age => age *2);
+
+console.log(chainedMap);
+
+// sort
+// Sorting Companies By Start Year
+const sortedCompanies = companies.sort(function(comp_1, comp_2) {
+  if(comp_1.start > comp_2.start) {
+    return 1;
+  } else {
+    return -1;
+  }
+});
+
+console.log(sortedCompanies);
+
+const sortedCompaniesShortHand = companies.sort((a,b) => (a.start > b.start ? 1 : -1));
+
+console.log(sortedCompaniesShortHand);
+
+// Sorting Ages
+const notQuiteSortAges = ages.sort();
+
+console.log(notQuiteSortAges);
+
+const sortAges = ages.sort((a, b) => a - b);
+
+console.log(sortAges);
+
+const sortedAges = ages.sort((a, b) => b - a);
+
+console.log(sortedAges);
+
+// reduce
+let ageSum = 0;
+
+for(let i = 0; i<ages.length; i++) {
+  ageSum += ages[i];
+}
+
+console.log(ageSum);
+
+const ageSumUsingReduce = ages.reduce(function(previousValue, currentValue) {
+  return previousValue + currentValue;
+}, 0);
+
+console.log(ageSumUsingReduce);
+
+const usingReduceShortHand = ages.reduce((total, value) => total + value, 0);
+
+console.log(usingReduceShortHand);
+
+// Get Total Years For Companies
+const totalYears = companies.reduce(function(accum, company) {
+  return accum + (company.end - company.start);
+}, 0);
+
+console.log(totalYears);
+
+const totalYearsShortHand = companies.reduce((accum, value) => accum + (value.end - value.start), 0);
+
+console.log(totalYearsShortHand);
+
+// Combinig All These Methods
+const combinedSpecs = ages
+.map(age => age * 2)
+.filter(age => age >= 40)
+.sort((a,b) => a - b)
+.reduce((a,b) => a + b, 0);
+
+console.log(combinedSpecs);
